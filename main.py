@@ -1,5 +1,5 @@
-from frontWindows import mainWindow
+from frontWindows import MainWindow
 
 
-mainWindow()
-mainWindow.root.mainloop()
+MainWindow()
+MainWindow.root.mainloop()

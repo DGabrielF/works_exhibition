@@ -1,6 +1,6 @@
 import re
 
-class validating:
+class Validating:
     def matchTest(parameter, regex, is_nome):
         if is_nome:
             recompile = re.compile(regex, re.IGNORECASE)
@@ -28,7 +28,7 @@ class validating:
                 regex = r"(^\d{0,"+f'{len_entry}'+r"}$)"
             else:
                 regex = r"(^$)"
-        validating.matchTest(parameter, regex, is_nome)
+        Validating.matchTest(parameter, regex, is_nome)
     
     def real(parameter, len_entry, can_be_negative=False):
         is_nome = False
@@ -52,7 +52,7 @@ class validating:
                 # Caller().info(text='Verificar o regex depois, precisei colocar um -1 que não faz sentido para funcionar')
             else:
                 regex = r"(^$)"
-        validating.matchTest(parameter, regex, is_nome)
+        Validating.matchTest(parameter, regex, is_nome)
     
     def words(parameter, len_entry):
         is_nome = True
@@ -62,4 +62,4 @@ class validating:
             regex = r"^([a-z]){0,"+f'{len_entry}'+r"}$"
         else:
             regex = r"(^$)"
-        validating.matchTest(parameter, regex, is_nome)
+        Validating.matchTest(parameter, regex, is_nome)
