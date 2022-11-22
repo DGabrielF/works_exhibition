@@ -36,7 +36,7 @@ class Calculators:
 
 class Random:
     @staticmethod
-    def limitedProbability(upper_bound=100, lower_bound=0, percentage=True):
+    def limitedProbability(lower_bound=0, upper_bound=100, percentage=True):
         from random import randint
         decimal_adjust = 100
         if upper_bound > 1 and lower_bound < upper_bound:
@@ -61,11 +61,11 @@ class SkillDetrimentalEffects:
         self.temporal_behavior = temporal_behavior
         self.effect_area_type = effect_area_type
 
-    @classmethod
-    def removePoints(self, removal_rate):
-        while self.duration:
-            self.target_attribute -= removal_rate
-
+    @staticmethod
+    def removePoints(target, effect, removal_rate):
+        while effect.duration > 0:
+            target.target_attribute -= removal_rate
+        return target.target_attribute
 
     def temporalEffect(countdown):
         import time
@@ -75,11 +75,61 @@ class SkillDetrimentalEffects:
                 time.sleep(1)
                 countdown -= 1
 
-        
 class Bleeding(SkillDetrimentalEffects):
     def __init__(self, initial_value, decay_rate, initial_demage, demage_decay_rate, occurrence_probability) -> None:
         self.target_attibute = 'HEALTH POINTS'
         self.effect_area_type = 'TARGET BODY'
         super().__init__(target_attribute=self.target_attibute, occurrence_probability=occurrence_probability, effect_area_type=self.effect_area_type, temporal_behavior = Calculators.durationGeometricSerieDecay(initial_demage, demage_decay_rate), duration = Calculators.durationLinearDecay(initial_value, decay_rate))
 
-SkillDetrimentalEffects.temporalEffect(10)
+class Burn(SkillDetrimentalEffects):
+    def __init__(self, duration, occurrence_probability, temporal_behavior) -> None:
+        self.target_attribute = 'HEALTH POINTS'
+        self.effect_area_type = 'AREA'
+        super().__init__(self.target_attribute, duration, occurrence_probability, temporal_behavior, self.effect_area_type)
+
+class Eletrocuted(SkillDetrimentalEffects):
+    def __init__(self, duration, occurrence_probability, temporal_behavior) -> None:
+        self.target_attribute = 'REACTIONS'
+        self.effect_area_type = 'CONTACT'
+        super().__init__(self.target_attribute, duration, occurrence_probability, temporal_behavior, self.effect_area_type)
+
+class Freezing(SkillDetrimentalEffects):
+    def __init__(self, duration, occurrence_probability, temporal_behavior) -> None:
+        self.target_attribute = 'STAMINA POINTS'
+        self.effect_area_type = 'AREA'
+        super().__init__(self.target_attribute, duration, occurrence_probability, temporal_behavior, self.effect_area_type)
+
+class Blindness(SkillDetrimentalEffects):
+    def __init__(self, duration, occurrence_probability, temporal_behavior) -> None:
+        self.target_attribute = 'VISION'
+        self.effect_area_type = 'TARGET BODY'
+        super().__init__(self.target_attribute, duration, occurrence_probability, temporal_behavior, self.effect_area_type)
+
+class Disease(SkillDetrimentalEffects):
+    def __init__(self, target_attribute, duration, occurrence_probability, temporal_behavior) -> None:
+        self.effect_area_type = 'TARGET BODY'
+        super().__init__(target_attribute, duration, occurrence_probability, temporal_behavior, self.effect_area_type)
+
+class AttackSkill:
+    def __init__(self, demage_base, critical_rate, critical_demage, ignored_resistence, casting_time, runtime, mana_spend, stamina_spend, health_spend, passive_activation_rate) -> None:
+        self.demage_base = demage_base
+        self.critical_rate = critical_rate
+        self.critical_demage = critical_demage
+        self.ignored_resistence = ignored_resistence
+        self.casting_time = casting_time
+        self.runtime = runtime
+        self.mana_spend = mana_spend
+        self.stamina_spend = stamina_spend
+        self.health_spend = health_spend
+        self.passive_activation_rate = passive_activation_rate
+
+    def demage(self):
+        p = Random.limitedProbability()
+        if p < self.critical_rate:
+            demage = self.demage_base*Random.limitedProbability(95,100,False) + self.critical_demage*Random.limitedProbability(percentage=False)
+        else:
+            demage = self.demage_base*Random.limitedProbability(95,100,False)
+        return demage
+
+effect_area_types = ['TARGET BODY', 'USER BODY', 'NEAR USER', 'MISSILE', 'CONTACT', 'JET', 'AREA']
+target_attributes = ['HEALTH POINTS', 'MANA POINTS', 'STAMINA POINTS', 'VISION', 'HEARING', 'SMELL', 'REACTIONS', 'SPEED']
