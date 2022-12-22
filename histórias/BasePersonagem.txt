@@ -1,0 +1,17 @@
+- Nome
+<>
+- Codinome
+<>
+- Altura
+<>
+- Peso
+<>
+- Luta
+<Domínio:
+Bom:
+Normal:
+Ruim:>
+- Habilidades
+<>
+- História
+<>
